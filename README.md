@@ -292,19 +292,3 @@ Trong `configs/default.yaml`:
 4. Dùng cùng version thư viện
 5. Lưu log train/val theo epoch
 
----
-
-## 16) Đổi tên script theo yêu cầu
-
-Đã sử dụng tên mới:
-- `scripts/download_data.py`  (thay `download_real_data.py`)
-- `scripts/preprocess_data.py` (thay `preprocess_real_data.py`)
-
-Các lệnh trong README và `run_pipeline.sh` đã đồng bộ theo tên mới.
-
----
-
-## 17) Tuyên bố sử dụng
-
-Mã nguồn phục vụ mục đích học thuật, nghiên cứu và thực nghiệm phát hiện lỗ hổng phần mềm.  
-Không sử dụng để khai thác trái phép hoặc gây hại hệ thống.
