@@ -4,7 +4,7 @@ import pandas as pd
 import torch
 from torch import nn
 from torch.utils.data import DataLoader
-from transformers import AutoModel, AutoTokenizer
+from transformers import AutoModel
 
 from src.utils import set_seed, load_yaml, ensure_dir, load_jsonl
 from src.data import VulnDataset
@@ -14,7 +14,7 @@ from src.engine.trainer import train_engine, evaluate
 
 class SingleEncoderClassifier(nn.Module):
     """
-    Baseline for CodeBERT / GraphCodeBERT:
+    Baseline for CodeBERT:
     encoder -> CLS -> MLP(768->512->256->1)
     """
     def __init__(self, model_name: str, hidden_dim=768, dropout=0.2, mlp_hidden_dims=(512, 256)):
@@ -121,7 +121,6 @@ def get_loaders(split_root, ds_key, cfg):
 def append_results(csv_path, row):
     if os.path.exists(csv_path):
         df_old = pd.read_csv(csv_path)
-        # drop duplicate row (same dataset+model) if exists
         df_old = df_old[~((df_old["dataset"] == row["dataset"]) & (df_old["model"] == row["model"]))]
         df_new = pd.concat([df_old, pd.DataFrame([row])], ignore_index=True)
     else:
@@ -201,7 +200,6 @@ def main():
                 f"Rec={row['recall']:.4f} F1={row['f1']:.4f} AUC={row['roc_auc']:.4f}"
             )
 
-    # also export table_3_1 snapshot from current results_all
     if os.path.exists(results_csv):
         df = pd.read_csv(results_csv)
         df.to_csv(os.path.join(cfg["paths"]["output_dir"], "table_3_1.csv"), index=False)

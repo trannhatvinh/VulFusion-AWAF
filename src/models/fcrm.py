@@ -1,3 +1,4 @@
+import torch
 import torch.nn as nn
 from transformers import AutoModel
 from .awaf import AWAFModule
@@ -22,7 +23,7 @@ class FCRMBase(nn.Module):
         super().__init__()
         self.code_encoder = AutoModel.from_pretrained(codebert_name)
         self.graph_encoder = AutoModel.from_pretrained(graphcodebert_name)
-        self.alpha_raw = nn.Parameter(nn.init.constant_(nn.Parameter(nn.empty(1)), 0.5))
+        self.alpha_raw = nn.Parameter(torch.tensor([0.5], dtype=torch.float))
         self.classifier = MLPClassifier(hidden_dim, mlp_hidden_dims, dropout)
 
     def _cls(self, out):

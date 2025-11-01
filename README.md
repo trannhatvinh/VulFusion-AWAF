@@ -40,7 +40,7 @@ Mục tiêu:
 
 ## 4) Kiến trúc mô hình
 
-## 4.1 FCRM (baseline)
+### 4.1 FCRM (baseline)
 Hai encoder chạy song song:
 - `microsoft/codebert-base` → vector \(E_C\)
 - `microsoft/graphcodebert-base` → vector \(E_G\)
@@ -51,14 +51,14 @@ E_{fusion} = \alpha E_C + (1-\alpha)E_G
 \]
 với \(\alpha\) là tham số học được toàn cục.
 
-## 4.2 FCRM-AWAF (đề xuất)
+### 4.2 FCRM-AWAF (đề xuất)
 Thay \(\alpha\) tĩnh bằng \(\alpha\) thích nghi theo từng mẫu:
 \[
 \alpha=\sigma(W[E_C\|E_G]+b), \quad
 E_{fusion}=\alpha E_C+(1-\alpha)E_G
 \]
 
-## 4.3 DFG
+### 4.3 DFG
 Nhánh Graph dùng pipeline:
 1. Parse AST bằng **tree-sitter** (C/C++)
 2. Trích xuất quan hệ **define-use** để tạo Data Flow Graph
@@ -73,12 +73,12 @@ Pipeline trong dự án bao gồm:
 1. **Tải dữ liệu thật từ nguồn công khai**
 2. **Tiền xử lý và chuẩn hóa dữ liệu**
 3. **Chia tập train/val/test theo tỷ lệ 70/15/15**
-4. **Huấn luyện hai mô hình: FCRM và FCRM-AWAF**
+4. **Huấn luyện các mô hình: CodeBERT, GraphCodeBERT, FCRM, FCRM-AWAF**
 5. **Áp dụng Early Stopping (patience = 3), lưu best checkpoint**
 6. **Đánh giá trên tập test độc lập**
 7. **Xuất các bảng kết quả:**
-   - **Bảng 3.1:** Kết quả FCRM và FCRM-AWAF trên Juliet, Big-Vul, NVD
-   - **Bảng 3.2:** So sánh trên Big-Vul gồm CodeBERT, GraphCodeBERT và kết quả của FCRM, FCRM-AWAF
+   - **Bảng 3.1:** Kết quả các mô hình trên Juliet, Big-Vul, NVD
+   - **Bảng 3.2:** So sánh trên Big-Vul gồm CodeBERT, GraphCodeBERT, FCRM, FCRM-AWAF
 
 ---
 
@@ -147,7 +147,7 @@ pip install -r requirements.txt
 
 ## 8) Hướng dẫn chạy đầy đủ
 
-## Bước 1: Build tree-sitter cho C/C++
+### Bước 1: Build tree-sitter cho C/C++
 ```bash
 bash scripts/setup_treesitter.sh
 ```
@@ -156,7 +156,7 @@ Kết quả:
 - `vendor/tree-sitter-cpp`
 - `build/my-languages.so`
 
-## Bước 2: Tải dữ liệu
+### Bước 2: Tải dữ liệu
 ```bash
 python scripts/download_data.py --out_dir data/raw --strict
 ```
@@ -165,22 +165,23 @@ Kết quả:
 - `data/raw/bigvul.jsonl`
 - `data/raw/nvd.jsonl`
 
-## Bước 3: Tiền xử lý + lọc C/C++
+### Bước 3: Tiền xử lý + lọc C/C++
 ```bash
 python scripts/preprocess_data.py --data_dir data/raw --out_dir data/processed --strict
 ```
 
-## Bước 4: Chia train/val/test = 70/15/15
+### Bước 4: Chia train/val/test = 70/15/15
 ```bash
 python scripts/split_data.py --in_dir data/processed --out_dir data/splits --seed 42 --strict
 ```
 
-## Bước 5: Huấn luyện mô hình
+### Bước 5: Huấn luyện mô hình
+Chạy đầy đủ 4 model trên 3 dataset:
 ```bash
-python train.py --config configs/default.yaml
+python train.py --config configs/default.yaml --model all --dataset all
 ```
 
-## Bước 6: Tổng hợp kết quả bảng
+### Bước 6: Tổng hợp bảng 3.2
 ```bash
 python evaluate.py
 ```
@@ -198,7 +199,7 @@ Script này chạy tuần tự:
 2. download_data
 3. preprocess_data
 4. split_data
-5. train
+5. train (all models, all datasets)
 6. evaluate
 
 ---
@@ -210,9 +211,9 @@ Sau khi chạy xong:
 - `outputs/results_all.csv`  
   (toàn bộ kết quả mô hình trên các tập)
 - `outputs/table_3_1.csv`  
-  (bảng kết quả chính theo dataset)
+  (bảng kết quả chính theo dataset/model từ `results_all.csv`)
 - `outputs/table_3_2.csv`  
-  (bảng so sánh Big-Vul với baseline tham chiếu)
+  (bảng so sánh Big-Vul gồm 4 mô hình)
 
 Checkpoint mô hình:
 - `checkpoints/*.pt`
@@ -268,6 +269,7 @@ Trong `configs/default.yaml`:
 - `max_len_code`: 256
 - `max_len_graph`: 256
 - `early_stopping_patience`: 3
+- `min_delta`: 1e-4
 
 ---
 
