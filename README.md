@@ -58,7 +58,7 @@ Thay \(\alpha\) tĩnh bằng \(\alpha\) thích nghi theo từng mẫu:
 E_{fusion}=\alpha E_C+(1-\alpha)E_G
 \]
 
-## 4.3 DFG thật (không placeholder)
+## 4.3 DFG
 Nhánh Graph dùng pipeline:
 1. Parse AST bằng **tree-sitter** (C/C++)
 2. Trích xuất quan hệ **define-use** để tạo Data Flow Graph
