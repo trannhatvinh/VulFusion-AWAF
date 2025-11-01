@@ -2,7 +2,6 @@
 __pycache__/
 *.pyc
 checkpoints/
-outputs/
 data/raw/
 data/processed/
 data/splits/
