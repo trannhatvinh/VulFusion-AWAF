@@ -234,11 +234,11 @@ NVD,FCRM-AWAF,0.8297,0.8216,0.8384,0.8299,0.8968
 
 ### Bảng 3.2 (`outputs/table_3_2.csv`)
 ```csv
-dataset,model,accuracy,precision,recall,f1,roc_auc,source
-Big-Vul,CodeBERT,0.7550,0.7750,0.7190,0.7460,,[74]
-Big-Vul,GraphCodeBERT,0.7330,0.7690,0.6670,0.7140,,[74]
-Big-Vul,FCRM,0.8246,0.8112,0.8369,0.8238,0.8897,This work
-Big-Vul,FCRM-AWAF,0.8513,0.8448,0.8581,0.8514,0.9132,This work
+dataset,model,accuracy,precision,recall,f1,roc_auc
+Big-Vul,CodeBERT,0.7550,0.7750,0.7190,0.7460,
+Big-Vul,GraphCodeBERT,0.7330,0.7690,0.6670,0.7140,
+Big-Vul,FCRM,0.8246,0.8112,0.8369,0.8238,0.8897
+Big-Vul,FCRM-AWAF,0.8513,0.8448,0.8581,0.8514,0.9132
 ```
 
 ---
